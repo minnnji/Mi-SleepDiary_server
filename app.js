@@ -21,6 +21,7 @@ app.use(cookieParser());
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
+const userRouter = require('./routes/users');
 
 mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
@@ -33,6 +34,7 @@ db.on('error', () => console.error('❌  MongoDB Connection Error '));
 
 app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
 
 app.use(function(req, res, next) {
   next(createError(404));
