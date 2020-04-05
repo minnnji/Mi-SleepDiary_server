@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   best_bedtime: { type: Number, required: true, default: 0, min: 0 },
   best_wakeUp_time: { type: Number, required: true, default: 0, min: 0 },
   my_diaries: { type: Object, required: true, default: {} },
-  sleep_last_updated_at: { type: Number, required: true, default: 0, min: 0 }
+  sleep_last_updated_at: { type: Date }
 }, {
   versionKey: false
 });
