@@ -17,6 +17,7 @@ auth.post('/login', async (req, res, next) => {
     }
     res.json(user);
   } catch(err) {
+    console.log(err);
     next(createError(500, '일시적인 오류가 발생하였습니다.'));
   }
 });
