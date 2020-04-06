@@ -53,4 +53,29 @@ users.post('/:user_id/sleep', async (req, res, next) => {
   }
 });
 
+users.get('/:user_id/sleep', async (req, res, next) => {
+  try {
+    const user_id = req.params.user_id;
+    const { startDate, endDate } = req.query;
+    const setEndDate = new Date(new Date(endDate).setHours(23, 59, 59, 59));
+    const allowEmptyValue = (req.query.allowEmptyValue === 'true');
+
+    let sleeps = await Sleep
+      .find({ user: user_id})
+      .find({ created_at: { $gte: startDate, $lte: setEndDate } })
+      .sort({ created_at: 1 });
+
+    if(!sleeps.length && !allowEmptyValue) {
+      sleeps = await Sleep
+      .find({ user: user_id})
+      .sort({ created_at: 1 });
+      return res.json(sleeps[sleeps.length - 1]);
+    }
+
+    res.json(sleeps);
+  } catch(error) {
+    console.log(error);
+  }
+});
+
 module.exports = users;
