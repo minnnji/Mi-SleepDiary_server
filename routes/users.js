@@ -30,7 +30,9 @@ users.post('/:user_id/sleep', async (req, res, next) => {
         bedTime,
         wakeUpTime,
         sleepCycle,
-        lightSleepPercentage
+        lightSleepSeconds,
+        deepSleepSeconds,
+        deepSleepPercentage
       } = req.body[i];
 
       sleep = await new Sleep({
@@ -40,8 +42,10 @@ users.post('/:user_id/sleep', async (req, res, next) => {
         bedTime: getCurrentDate(bedTime),
         wakeUp_time: getCurrentDate(wakeUpTime),
         sleep_cycle: sleepCycle,
-        light_sleep_percentage: lightSleepPercentage,
-        deep_sleep_percentage: 100 - lightSleepPercentage
+        deep_sleep_seconds: deepSleepSeconds,
+        light_sleep_seconds: lightSleepSeconds,
+        deep_sleep_percentage: deepSleepPercentage,
+        light_sleep_percentage: 100 - deepSleepPercentage
       });
       sleepList.push(sleep);
     }
@@ -69,7 +73,7 @@ users.get('/:user_id/sleep', async (req, res, next) => {
       sleeps = await Sleep
       .find({ user: user_id})
       .sort({ created_at: 1 });
-      return res.json(sleeps[sleeps.length - 1]);
+      return res.json([sleeps[sleeps.length - 1]]);
     }
 
     res.json(sleeps);

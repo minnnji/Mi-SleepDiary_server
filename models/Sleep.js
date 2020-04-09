@@ -11,8 +11,10 @@ const SleepSchema = new mongoose.Schema({
   bedTime: { type: Date, required: true, default: 0, min: 0 },
   wakeUp_time: { type: Date, required: true, default: 0, min: 0 },
   sleep_cycle: { type: Array, required: true, default: [] },
-  light_sleep_percentage: { type: Number, required: true, default: 0, min: 0 },
+  deep_sleep_seconds: { type: Number, required: true, default: 0, min: 0 },
+  light_sleep_seconds: { type: Number, required: true, default: 0, min: 0 },
   deep_sleep_percentage: { type: Number, required: true, default: 0, min: 0 },
+  light_sleep_percentage: { type: Number, required: true, default: 0, min: 0 },
   has_diary: { type: Boolean, required: true, default: false }
 }, {
   versionKey: false
