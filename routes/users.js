@@ -3,7 +3,7 @@ const createError = require('http-errors');
 const users = express.Router();
 const Sleep = require('../models/Sleep');
 const User = require('../models/User');
-const { getCurrentDate } = require('../utils/helper');
+const Diary = require('../models/Diary');
 
 users.get('/login', () => {
   console.log('login');
@@ -37,10 +37,10 @@ users.post('/:user_id/sleep', async (req, res, next) => {
 
       sleep = await new Sleep({
         user: req.params.user_id,
-        created_at: getCurrentDate(wakeUpTime),
+        created_at: wakeUpTime,
         sleep_duration: sleepDuration,
-        bedTime: getCurrentDate(bedTime),
-        wakeUp_time: getCurrentDate(wakeUpTime),
+        bedTime: bedTime,
+        wakeUp_time: wakeUpTime,
         sleep_cycle: sleepCycle,
         deep_sleep_seconds: deepSleepSeconds,
         light_sleep_seconds: lightSleepSeconds,
@@ -79,6 +79,36 @@ users.get('/:user_id/sleep', async (req, res, next) => {
     res.json(sleeps);
   } catch(error) {
     console.log(error);
+  }
+});
+
+users.post('/:user_id/diaries', async (req, res, next) => {
+  try {
+    const {
+      date,
+      sleepHours,
+      behaviorScore,
+      behaviorScoreReason,
+      feelingColor,
+      memo,
+      sleep
+    } = req.body;
+
+    diary = await new Diary({
+      author: req.params.user_id,
+      date,
+      sleep_hours: sleepHours,
+      behavior_score: behaviorScore,
+      behavior_score_reason: behaviorScoreReason,
+      feeling_color: feelingColor,
+      memo,
+      sleep
+    }).save();
+
+    res.json(diary);
+  } catch(error) {
+    console.log(error);
+    next(createError(500, '일시적인 오류가 발생하였습니다.'));
   }
 });
 
