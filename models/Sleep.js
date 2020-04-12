@@ -15,7 +15,10 @@ const SleepSchema = new mongoose.Schema({
   light_sleep_seconds: { type: Number, required: true, default: 0, min: 0 },
   deep_sleep_percentage: { type: Number, required: true, default: 0, min: 0 },
   light_sleep_percentage: { type: Number, required: true, default: 0, min: 0 },
-  has_diary: { type: Boolean, required: true, default: false }
+  diary: {
+    type: mongoose.Types.ObjectId,
+    ref: "Diary",
+  }
 }, {
   versionKey: false
 });

@@ -13,14 +13,21 @@ users.put('/:user_id', async (req, res, next) => {
   try {
     const user_id = req.params.user_id;
     const updateInfo = req.body;
-    await User.updateMany({ _id: user_id }, { $set: updateInfo });
+    let update = { $set: updateInfo };
+
+    if(updateInfo.hasOwnProperty('my_diaries')) {
+      update = { $push: updateInfo };
+    }
+
+    await User.updateMany({ _id: user_id }, update);
     res.json(req.body);
+
   } catch(error) {
     console.log(error);
   }
 });
 
-users.post('/:user_id/sleep', async (req, res, next) => {
+users.post('/:user_id/sleeps', async (req, res, next) => {
   const sleepList = [];
 
   try {
@@ -57,9 +64,19 @@ users.post('/:user_id/sleep', async (req, res, next) => {
   }
 });
 
-users.get('/:user_id/sleep', async (req, res, next) => {
+users.get('/:user_id/sleeps', async (req, res, next) => {
   try {
     const user_id = req.params.user_id;
+
+    if(!Object.keys(req.query).length) {
+      const sleepList = await Sleep
+        .find({ user: user_id })
+        .sort({ created_at: -1 })
+        .populate('diary')
+        .lean();
+      return res.json(sleepList);
+    }
+
     const { startDate, endDate } = req.query;
     const setEndDate = new Date(new Date(endDate).setHours(23, 59, 59, 59));
     const allowEmptyValue = (req.query.allowEmptyValue === 'true');
@@ -71,12 +88,26 @@ users.get('/:user_id/sleep', async (req, res, next) => {
 
     if(!sleeps.length && !allowEmptyValue) {
       sleeps = await Sleep
-      .find({ user: user_id})
-      .sort({ created_at: 1 });
+        .find({ user: user_id})
+        .sort({ created_at: 1 });
       return res.json([sleeps[sleeps.length - 1]]);
     }
 
     res.json(sleeps);
+  } catch(error) {
+    console.log(error);
+  }
+});
+
+users.put('/:user_id/sleeps/:sleep_id', async (req, res, next) => {
+  try {
+    const { sleep_id } = req.params;
+    const updateInfo = req.body;
+    let update = { $set: updateInfo };
+
+    const response = await Sleep.updateOne({ _id: sleep_id }, update);
+    res.json(response);
+
   } catch(error) {
     console.log(error);
   }
