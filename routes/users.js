@@ -99,6 +99,18 @@ users.get('/:user_id/sleeps', async (req, res, next) => {
   }
 });
 
+users.get('/:user_id/sleeps/:sleep_id', async (req, res, next) => {
+  try {
+    const sleep = await Sleep
+      .findById(req.params.sleep_id)
+      .populate('diary')
+      .lean();
+    res.json(sleep);
+  } catch(error) {
+    console.log(error);
+  }
+});
+
 users.put('/:user_id/sleeps/:sleep_id', async (req, res, next) => {
   try {
     const { sleep_id } = req.params;
