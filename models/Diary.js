@@ -7,10 +7,10 @@ const DiarySchema = new mongoose.Schema({
     required: true
   },
   date: { type: Date, required: true },
-  sleep_hours: { type: String, required: true },
-  behavior_score: { type: Number, required: true },
-  behavior_score_reason: { type: String },
-  feeling_color: { type: Array },
+  sleepHours: { type: String, required: true },
+  behaviorScore: { type: Number, required: true },
+  behaviorScoreReason: { type: String },
+  feelingColor: { type: Array },
   memo: { type: String },
   sleep: {
     type: mongoose.Types.ObjectId,

@@ -44,15 +44,15 @@ users.post('/:user_id/sleeps', async (req, res, next) => {
 
       sleep = await new Sleep({
         user: req.params.user_id,
-        created_at: wakeUpTime,
-        sleep_duration: sleepDuration,
-        bedTime: bedTime,
-        wakeUp_time: wakeUpTime,
-        sleep_cycle: sleepCycle,
-        deep_sleep_seconds: deepSleepSeconds,
-        light_sleep_seconds: lightSleepSeconds,
-        deep_sleep_percentage: deepSleepPercentage,
-        light_sleep_percentage: 100 - deepSleepPercentage
+        createdAt: wakeUpTime,
+        sleepDuration,
+        bedTime,
+        wakeUpTime,
+        sleepCycle,
+        deepSleepSeconds,
+        lightSleepSeconds,
+        deepSleepPercentage,
+        lightSleepPercentage: 100 - deepSleepPercentage
       });
       sleepList.push(sleep);
     }
@@ -71,7 +71,7 @@ users.get('/:user_id/sleeps', async (req, res, next) => {
     if(!Object.keys(req.query).length) {
       const sleepList = await Sleep
         .find({ user: user_id })
-        .sort({ created_at: -1 })
+        .sort({ createdAt: -1 })
         .populate('diary')
         .lean();
       return res.json(sleepList);
@@ -83,13 +83,13 @@ users.get('/:user_id/sleeps', async (req, res, next) => {
 
     let sleeps = await Sleep
       .find({ user: user_id})
-      .find({ created_at: { $gte: startDate, $lte: setEndDate } })
-      .sort({ created_at: 1 });
+      .find({ createdAt: { $gte: startDate, $lte: setEndDate } })
+      .sort({ createdAt: 1 });
 
     if(!sleeps.length && !allowEmptyValue) {
       sleeps = await Sleep
         .find({ user: user_id})
-        .sort({ created_at: 1 });
+        .sort({ createdAt: 1 });
       return res.json([sleeps[sleeps.length - 1]]);
     }
 
@@ -140,10 +140,10 @@ users.post('/:user_id/diaries', async (req, res, next) => {
     diary = await new Diary({
       author: req.params.user_id,
       date,
-      sleep_hours: sleepHours,
-      behavior_score: behaviorScore,
-      behavior_score_reason: behaviorScoreReason,
-      feeling_color: feelingColor,
+      sleepHours,
+      behaviorScore,
+      behaviorScoreReason,
+      feelingColor,
       memo,
       sleep
     }).save();
