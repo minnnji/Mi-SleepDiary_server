@@ -15,15 +15,12 @@ users.put('/:user_id', async (req, res, next) => {
     const updateInfo = req.body;
     let update = { $set: updateInfo };
 
-    if(updateInfo.hasOwnProperty('my_diaries')) {
-      update = { $push: updateInfo };
-    }
-
     await User.updateMany({ _id: user_id }, update);
     res.json(req.body);
 
   } catch(error) {
     console.log(error);
+    next(createError(500, '일시적인 오류가 발생하였습니다.'));
   }
 });
 
@@ -96,6 +93,7 @@ users.get('/:user_id/sleeps', async (req, res, next) => {
     res.json(sleeps);
   } catch(error) {
     console.log(error);
+    next(createError(500, '일시적인 오류가 발생하였습니다.'));
   }
 });
 
@@ -108,6 +106,7 @@ users.get('/:user_id/sleeps/:sleep_id', async (req, res, next) => {
     res.json(sleep);
   } catch(error) {
     console.log(error);
+    next(createError(500, '일시적인 오류가 발생하였습니다.'));
   }
 });
 
@@ -122,6 +121,7 @@ users.put('/:user_id/sleeps/:sleep_id', async (req, res, next) => {
 
   } catch(error) {
     console.log(error);
+    next(createError(500, '일시적인 오류가 발생하였습니다.'));
   }
 });
 
